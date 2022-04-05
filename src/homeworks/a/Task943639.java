@@ -56,7 +56,8 @@ public class Task943639 {
             System.exit(1);
         }
 
-        startCalendar = new GregorianCalendar(date.getYear() + EPOCH_COEFFICIENT, date.getMonth(), date.getDate());
+        startCalendar = new GregorianCalendar();
+        startCalendar.setTime(date);
 
         calendar = new GregorianCalendar(startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH),
                 startCalendar.get(Calendar.DAY_OF_MONTH));
@@ -66,7 +67,6 @@ public class Task943639 {
         do {
             switch (numberOfWorkDay) {
                 case 1:
-
                     if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
                         calendar.add(Calendar.DAY_OF_MONTH, 1);
                         System.out.println(sdf.format(calendar.getTime()));
