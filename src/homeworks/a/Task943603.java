@@ -12,13 +12,15 @@ import java.util.Scanner;
 import com.google.gson.Gson;
 
 public class Task943603 {
+    private static final int MINS_TO_HOURS = 60;
+    private static final int SECS_TO_MINS = 60;
+
     public static void main(final String[] args) {
         long longValue = 0;
         String scannedLine;
         final Scanner input = new Scanner(System.in);
 
         scannedLine = input.nextLine().replaceAll("['’‘]", "\"");
-        System.out.println(scannedLine);
 
         final Gson gson = new Gson();
 
@@ -26,16 +28,21 @@ public class Task943603 {
 
         for (final TimeCounter tc : tcs) {
             tc.convertStringsToDates();
-            longValue += tc.getDurationInMinutes();
+            // longValue += tc.getDurationInMinutes();
+            longValue += tc.getDurationInSeconds();
         }
 
-        System.out.printf("%d-%02d", longValue / 60, longValue % 60);
+        // закомментировать в случае смены методов в 32-33 строках
+        longValue /= SECS_TO_MINS;
+
+        System.out.printf("%d-%02d", longValue / MINS_TO_HOURS, longValue % MINS_TO_HOURS);
 
         input.close();
     }
 
     private class TimeCounter {
         private static final int MS_TO_MINUTES = 60000;
+        private static final long MS_TO_SECONDS = 1000;
         private String start;
         private String end;
         private Date startDate = null;
@@ -47,6 +54,13 @@ public class Task943603 {
          */
         public long getDurationInMinutes() {
             return getDuration() / MS_TO_MINUTES;
+        }
+
+        /**
+         * @return разницу между начальной и конечной датами в секундах
+         */
+        public long getDurationInSeconds() {
+            return getDuration() / MS_TO_SECONDS;
         }
 
         /**
