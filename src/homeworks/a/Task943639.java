@@ -13,13 +13,7 @@ import java.util.Scanner;
 
 // Works in Java 18. In further versions class Date will be deleted.
 public class Task943639 {
-    /**
-     * константа для приведения года
-     */
-    private static final int EPOCH_COEFFICIENT = 1900;
-    /**
-     *
-     */
+    private static final int START_VALUE_OF_WORK_DAYS = 4;
     private static final String DATE_REGEX = "^(0?[1-9]|[12]\\d|3[01])\\.(0?[1-9]|1[012])\\.\\d{4}$";
 
     public static void main(String[] args) {
@@ -36,20 +30,7 @@ public class Task943639 {
             try {
                 date = sdf.parse(startDateString);
             } catch (ParseException e) {
-                SimpleDateFormat timeStampPattern = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss");
-                String fileName = "Log_" + timeStampPattern.format(java.time.LocalDateTime.now()) + ".txt";
-                File myFile = new File(fileName);
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(myFile));) {
-                    for (StackTraceElement elem : e.getStackTrace()) {
-                        writer.write(elem.toString() + "\n");
-                    }
-                } catch (IOException ex) {
-                    System.out
-                            .println("При записи данных о прошлой ошибке произошла какая-то ошибка. Самоликвидируюсь.");
-                    System.exit(1);
-                }
-                System.err.println("Что-то сломалось. Всё, что я знаю, записано в файл " + fileName);
-                System.exit(1);
+                saveStacktraceToFile(e);
             }
         } else {
             System.err.println("Введенная строка не соответствует формату.");
@@ -75,7 +56,7 @@ public class Task943639 {
                         System.out.println(sdf.format(calendar.getTime()));
                         calendar.add(Calendar.DAY_OF_MONTH, 1);
                     }
-                    numberOfWorkDay = 4;
+                    numberOfWorkDay = START_VALUE_OF_WORK_DAYS;
                     break;
                 case 2:
                 case 3:
@@ -89,5 +70,22 @@ public class Task943639 {
         } while (startCalendar.after(calendar));
 
         input.close();
+    }
+
+    private static void saveStacktraceToFile(ParseException e) {
+        SimpleDateFormat timeStampPattern = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss");
+        String fileName = "Log_" + timeStampPattern.format(java.time.LocalDateTime.now()) + ".txt";
+        File myFile = new File(fileName);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(myFile));) {
+            for (StackTraceElement elem : e.getStackTrace()) {
+                writer.write(elem.toString() + "\n");
+            }
+        } catch (IOException ex) {
+            System.out
+                    .println("При записи данных о прошлой ошибке произошла какая-то ошибка. Самоликвидируюсь.");
+            System.exit(1);
+        }
+        System.err.println("Что-то сломалось. Всё, что я знаю, записано в файл " + fileName);
+        System.exit(1);
     }
 }
