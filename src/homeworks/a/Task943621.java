@@ -6,13 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
@@ -22,76 +20,136 @@ import com.google.gson.Gson;
 //['14.09.2020-02.10.2020']
 
 public class Task943621 {
+    /**
+     * константы с кодами ошибок, используемыми в рамках данного файла
+     */
+    private static final int PARSING_ERROR_CODE = 1;
+    private static final int INVALID_DATE_ERROR_CODE = 2;
+    private static final int FORMAT_ERROR_CODE = 3;
+    private static final int FILESAVE_ERROR_CODE = 4;
+
+    /**
+     * формат вводимой даты по условиям задачи и
+     */
+    private static final String DATE_FORMAT = "dd.MM.yyyy";
     private static final String SINGLE_DATE_REGEX = "^(0?[1-9]|[12]\\d|3[01])\\.(0?[1-9]|1[012])\\.\\d{4}$";
     private static final String DATE_PERIOD_REGEX = "^(0?[1-9]|[12]\\d|3[01])\\.(0?[1-9]|1[012])\\.\\d{4}-(0?[1-9]|[12]\\d|3[01])\\.(0?[1-9]|1[012])\\.\\d{4}$";
 
-    public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-        String bookedDatesString = input.nextLine();
-        String newBookingString = input.nextLine();
-        DateTimeFormatter dFormatter = DateTimeFormatter.ofPattern("");
+    public static void main(final String[] args) {
+        final Scanner input = new Scanner(System.in);
+        final Gson gson = new Gson();
+        List<BookingPeriod> bookedDates;
+        BookingPeriod bookingRequest = null;
+        final String bookedDatesString;
+        final String bookingRequestString;
 
-        Gson gson = new Gson();
+        bookedDatesString = input.nextLine();
+        final String[] jsonStrings = gson.fromJson(bookedDatesString, String[].class);
+        bookedDates = new ArrayList<>();
 
-        String[] splitStrings = gson.fromJson(bookedDatesString, String[].class);
-
-        for (String string1 : splitStrings) {
-            if (string1.matches(SINGLE_DATE_REGEX)) {
-                BookedPeriod abc = new BookedPeriod(string1);
-            } else if (string1.matches(DATE_PERIOD_REGEX)) {
-                String[] splString = string1.split("-");
-                BookedPeriod abc = new BookedPeriod(splString[0], splString[1]);
+        for (final String string : jsonStrings) {
+            if (string.matches(SINGLE_DATE_REGEX)) {
+                bookedDates.add(new BookingPeriod(string));
+            } else if (string.matches(DATE_PERIOD_REGEX)) {
+                final String[] splString = string.split("-");
+                bookedDates.add(new BookingPeriod(splString[0], splString[1]));
+            } else {
+                System.err.println(
+                        "Какой-то элемент первой строки не соответствует заданному формату. Самоликвидируюсь.");
+                System.exit(FORMAT_ERROR_CODE);
             }
         }
+
+        bookingRequestString = input.nextLine();
+        if (bookingRequestString.matches(SINGLE_DATE_REGEX)) {
+            bookingRequest = new BookingPeriod(bookingRequestString);
+        } else if (bookingRequestString.matches(DATE_PERIOD_REGEX)) {
+            final String[] splString = bookingRequestString.split("-");
+            bookingRequest = new BookingPeriod(splString[0], splString[1]);
+        } else {
+            System.err.println("Вторая строка не соответствует заданному формату. Самоликвидируюсь.");
+            System.exit(FORMAT_ERROR_CODE);
+        }
+
+        System.out.println(
+                BookingPeriod.checkAvailabilityForRequest(bookingRequest, bookedDates.toArray(new BookingPeriod[0])));
 
         input.close();
     }
 
-    private static class BookedPeriod {
-        private Calendar startDate;
-        private Calendar endDate;
+    private static class BookingPeriod {
+        private final Calendar startDate;
+        private final Calendar endDate;
+        private boolean isOneDay;
 
-        public BookedPeriod() {
+        public BookingPeriod() {
             this.startDate = new GregorianCalendar();
             this.endDate = new GregorianCalendar();
         }
 
-        public BookedPeriod(String string) {
+        public BookingPeriod(final String string) {
             this();
-            Date date = parseDateFromString(string, "dd.MM.yyyy");
+
+            final Date date = parseDateFromString(string, DATE_FORMAT);
             this.startDate.setTime(date);
             this.endDate.setTime(date);
-            System.out.println("Success");
+            this.isOneDay = true;
         }
 
-        private Date parseDateFromString(String string, String format) {
-            SimpleDateFormat sdf = new SimpleDateFormat(format);
+        public BookingPeriod(final String string1, final String string2) {
+            this();
+
+            this.startDate.setTime(parseDateFromString(string1, DATE_FORMAT));
+            this.endDate.setTime(parseDateFromString(string2, DATE_FORMAT));
+            this.isOneDay = false;
+            if (endDate.before(startDate)) {
+                System.err.println(
+                        "Ошибка во вводе: дата окончания бронирования раньше даты его начала. Самоликвидируюсь.");
+                System.exit(INVALID_DATE_ERROR_CODE);
+            }
+        }
+
+        private Date parseDateFromString(final String string, final String format) {
+            final SimpleDateFormat sdf = new SimpleDateFormat(format);
             try {
                 return sdf.parse(string);
-            } catch (ParseException e) {
+            } catch (final ParseException e) {
                 saveStackTraceToFile(e);
+                System.exit(PARSING_ERROR_CODE);
             }
             return null;
         }
 
-        public BookedPeriod(String string1, String string2) {
-            this();
-
-            Date tmp;
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-            try {
-                tmp = sdf.parse(string1);
-                this.startDate.setTime(tmp);
-                tmp = sdf.parse(string2);
-                this.endDate.setTime(tmp);
-            } catch (ParseException e) {
-                saveStackTraceToFile(e);
-            }
-            System.out.println("Double success");
+        @Override
+        public String toString() {
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+            return "BookingPeriod [endDate=" + sdf.format(endDate.getTime()) + ", startDate="
+                    + sdf.format(startDate.getTime()) + ", isOneDay=" + isOneDay + "]";
         }
+
+        public static boolean checkAvailabilityForRequest(BookingPeriod request, BookingPeriod[] bookedDates) {
+            boolean availability = true;
+
+            for (BookingPeriod bPeriod : bookedDates) {
+                if ((request.startDate.after(bPeriod.startDate) &&
+                        request.startDate.before(bPeriod.endDate))
+                        || (request.endDate.after(bPeriod.startDate) &&
+                                request.startDate.before(bPeriod.endDate))
+                        || request.startDate.equals(bPeriod.startDate) ||
+                        request.endDate.equals(bPeriod.endDate) ||
+                        request.startDate.equals(bPeriod.endDate) ||
+                        request.endDate.equals(bPeriod.startDate)) {
+
+                    availability = false;
+                    break;
+                }
+            }
+            return availability;
+        }
+
     }
 
-    private static void saveStackTraceToFile(final ParseException e) {
+    private static void saveStackTraceToFile(final Exception e) {
         final SimpleDateFormat timeStampPattern = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss");
         final String fileName = "Log_" + timeStampPattern.format(java.time.LocalDateTime.now()) + ".txt";
         final File myFile = new File(fileName);
@@ -102,9 +160,9 @@ public class Task943621 {
         } catch (final IOException ex) {
             System.out
                     .println("При записи данных о прошлой ошибке произошла какая-то ошибка. Самоликвидируюсь.");
-            System.exit(1);
+            System.exit(FILESAVE_ERROR_CODE);
         }
         System.err.println("Что-то сломалось. Всё, что я знаю, записано в файл " + fileName);
-        System.exit(1);
     }
+
 }
