@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
@@ -21,7 +22,8 @@ import com.google.gson.Gson;
 //['14.09.2020-02.10.2020']
 
 public class Task943621 {
-    private static final String SINGLE_DATE_REGEX = ".*";
+    private static final String SINGLE_DATE_REGEX = "^(0?[1-9]|[12]\\d|3[01])\\.(0?[1-9]|1[012])\\.\\d{4}$";
+    private static final String DATE_PERIOD_REGEX = "^(0?[1-9]|[12]\\d|3[01])\\.(0?[1-9]|1[012])\\.\\d{4}-(0?[1-9]|[12]\\d|3[01])\\.(0?[1-9]|1[012])\\.\\d{4}$";
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
@@ -33,25 +35,59 @@ public class Task943621 {
 
         String[] splitStrings = gson.fromJson(bookedDatesString, String[].class);
 
-        for (String string : splitStrings) {
-            if (string.matches(SINGLE_DATE_REGEX)) {
-                BookedPeriod abc = new BookedPeriod(string);
+        for (String string1 : splitStrings) {
+            if (string1.matches(SINGLE_DATE_REGEX)) {
+                BookedPeriod abc = new BookedPeriod(string1);
+            } else if (string1.matches(DATE_PERIOD_REGEX)) {
+                String[] splString = string1.split("-");
+                BookedPeriod abc = new BookedPeriod(splString[0], splString[1]);
             }
         }
+
+        input.close();
     }
 
     private static class BookedPeriod {
         private Calendar startDate;
         private Calendar endDate;
 
-        public BookedPeriod(String date) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        public BookedPeriod() {
+            this.startDate = new GregorianCalendar();
+            this.endDate = new GregorianCalendar();
+        }
+
+        public BookedPeriod(String string) {
+            this();
+            Date date = parseDateFromString(string, "dd.MM.yyyy");
+            this.startDate.setTime(date);
+            this.endDate.setTime(date);
+            System.out.println("Success");
+        }
+
+        private Date parseDateFromString(String string, String format) {
+            SimpleDateFormat sdf = new SimpleDateFormat(format);
             try {
-                Date tmp = sdf.parse(date);
+                return sdf.parse(string);
             } catch (ParseException e) {
                 saveStackTraceToFile(e);
             }
-            System.out.println("Success");
+            return null;
+        }
+
+        public BookedPeriod(String string1, String string2) {
+            this();
+
+            Date tmp;
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+            try {
+                tmp = sdf.parse(string1);
+                this.startDate.setTime(tmp);
+                tmp = sdf.parse(string2);
+                this.endDate.setTime(tmp);
+            } catch (ParseException e) {
+                saveStackTraceToFile(e);
+            }
+            System.out.println("Double success");
         }
     }
 
