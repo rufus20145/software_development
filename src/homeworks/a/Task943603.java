@@ -12,56 +12,72 @@ import java.util.Scanner;
 import com.google.gson.Gson;
 
 public class Task943603 {
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
+        long longValue = 0;
         String scannedLine;
-        Scanner input = new Scanner(System.in);
+        final Scanner input = new Scanner(System.in);
 
         scannedLine = input.nextLine().replaceAll("['’‘]", "\"");
         System.out.println(scannedLine);
 
-        Gson gson = new Gson();
+        final Gson gson = new Gson();
 
-        TimeCounter[] tcs = gson.fromJson(scannedLine, TimeCounter[].class);
+        final TimeCounter[] tcs = gson.fromJson(scannedLine, TimeCounter[].class);
 
-        for (TimeCounter tc : tcs) {
-            System.out.println(tc.getDurationInSecs() + " duration");
+        for (final TimeCounter tc : tcs) {
+            tc.convertStringsToDates();
+            longValue += tc.getDurationInMinutes();
         }
+
+        System.out.printf("%d-%02d", longValue / 60, longValue % 60);
+
+        input.close();
     }
 
     private class TimeCounter {
-        private static final int MS_TO_SECONDS = 1000;
-        String start;
-        String end;
+        private static final int MS_TO_MINUTES = 60000;
+        private String start;
+        private String end;
+        private Date startDate = null;
+        private Date endDate = null;
 
-        public long getDurationInSecs() {
-            return getDuration() / MS_TO_SECONDS;
+        /**
+         * @return разницу между начальной и конечной датами в минутах с округлением
+         *         вниз
+         */
+        public long getDurationInMinutes() {
+            return getDuration() / MS_TO_MINUTES;
         }
 
+        /**
+         * @return разницу между начальной и конечной датами в миллисекундах
+         */
         public long getDuration() {
-            Date startDate = null;
-            Date endDate = null;
-            SimpleDateFormat sdf = new SimpleDateFormat("DD.MM.YYYY hh:mm:ss");
-            try {
-                startDate = sdf.parse(this.start);
-                endDate = sdf.parse(this.end);
-            } catch (ParseException e) {
-                System.err.println("Произошла ошибка при парсинге. Вся информация об ошибке записана в файл.");
-                saveStackTraceToFile(e);
-            }
 
             return endDate.getTime() - startDate.getTime();
         }
+
+        private void convertStringsToDates() {
+            final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+            try {
+                this.startDate = sdf.parse(this.start);
+                this.endDate = sdf.parse(this.end);
+            } catch (final ParseException e) {
+                System.err.println("Произошла ошибка при парсинге. Вся информация об ошибке записана в файл.");
+                saveStackTraceToFile(e);
+            }
+        }
     }
 
-    private static void saveStackTraceToFile(ParseException e) {
-        SimpleDateFormat timeStampPattern = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss");
-        String fileName = "Log_" + timeStampPattern.format(java.time.LocalDateTime.now()) + ".txt";
-        File myFile = new File(fileName);
+    private static void saveStackTraceToFile(final ParseException e) {
+        final SimpleDateFormat timeStampPattern = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss");
+        final String fileName = "Log_" + timeStampPattern.format(java.time.LocalDateTime.now()) + ".txt";
+        final File myFile = new File(fileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(myFile));) {
-            for (StackTraceElement elem : e.getStackTrace()) {
+            for (final StackTraceElement elem : e.getStackTrace()) {
                 writer.write(elem.toString() + "\n");
             }
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             System.out
                     .println("При записи данных о прошлой ошибке произошла какая-то ошибка. Самоликвидируюсь.");
             System.exit(1);
