@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
@@ -33,16 +34,16 @@ public class Task943621 {
     private static final String DATE_FORMAT = "dd.MM.yyyy";
     private static final String SINGLE_DATE_REGEX = "^(0?[1-9]|[12]\\d|3[01])\\.(0?[1-9]|1[012])\\.\\d{4}$";
     private static final String DATE_PERIOD_REGEX = "^(0?[1-9]|[12]\\d|3[01])\\.(0?[1-9]|1[012])\\.\\d{4}-(0?[1-9]|[12]\\d|3[01])\\.(0?[1-9]|1[012])\\.\\d{4}$";
+    private static Scanner input = new Scanner(System.in);
 
     public static void main(final String[] args) {
-        final Scanner input = new Scanner(System.in);
         final Gson gson = new Gson();
         List<BookingPeriod> bookedDates;
         BookingPeriod bookingRequest = null;
         final String bookedDatesString;
         final String bookingRequestString;
 
-        bookedDatesString = input.nextLine();
+        bookedDatesString = getStringValue();
         final String[] jsonStrings = gson.fromJson(bookedDatesString, String[].class);
         bookedDates = new ArrayList<>();
 
@@ -59,7 +60,7 @@ public class Task943621 {
             }
         }
 
-        bookingRequestString = input.nextLine();
+        bookingRequestString = getStringValue();
         if (bookingRequestString.matches(SINGLE_DATE_REGEX)) {
             bookingRequest = new BookingPeriod(bookingRequestString);
         } else if (bookingRequestString.matches(DATE_PERIOD_REGEX)) {
@@ -72,7 +73,7 @@ public class Task943621 {
 
         System.out.println(
                 BookingPeriod.checkAvailabilityForRequest(bookingRequest, bookedDates.toArray(new BookingPeriod[0])));
-                
+
         input.close();
     }
 
@@ -157,5 +158,27 @@ public class Task943621 {
             System.exit(FILESAVE_ERROR_CODE);
         }
         System.err.println("Что-то сломалось. Всё, что я знаю, записано в файл " + fileName);
+    }
+
+    private static String getStringValue() {
+        boolean exceptionCaught = false;
+        String inputString = null;
+
+        do {
+            exceptionCaught = false;
+            try {
+                inputString = input.nextLine();
+            } catch (NoSuchElementException e) {
+                System.out.println("Вы не ввели ничего. Повторите попытку.");
+                exceptionCaught = true;
+                input.nextLine();
+            } catch (IllegalStateException e) {
+                System.out.println("Система ввода оказалась в некорректном состоянии. Повторите попытку.");
+                exceptionCaught = true;
+                input = new Scanner(System.in);
+                input.nextLine();
+            }
+        } while (exceptionCaught);
+        return inputString;
     }
 }

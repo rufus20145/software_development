@@ -2,6 +2,7 @@ package src.homeworks.a;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Task943657 {
@@ -16,15 +17,16 @@ public class Task943657 {
     private static final int MINUTES_TO_HOURS = 60;
     private static final int NUMBER_OF_MINUTES_IN_DAY = 1440;
     private static final String DOUBLE_TIME_REGEX = "^(2[0-3]|1\\d|\\d):([0-5]\\d) (2[0-3]|1\\d|\\d):([0-5]\\d)$";
+    private static Scanner input = new Scanner(System.in);
 
     // решение тупое прямо как я сегодня (или не только сегодня)
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
+
         List<String> scannedStrings = new ArrayList<>();
         int[] numberOfVisitors = new int[NUMBER_OF_MINUTES_IN_DAY];
 
         do {
-            String buffer = input.nextLine();
+            String buffer = getStringValue();
             if (buffer.equals("")) {
                 break;
             }
@@ -73,5 +75,27 @@ public class Task943657 {
     private static String convertToHoursAndMinutes(int numOfMinutes) {
         return String.format("%02d:%02d", numOfMinutes / MINUTES_TO_HOURS,
                 numOfMinutes % MINUTES_TO_HOURS);
+    }
+
+    private static String getStringValue() {
+        boolean exceptionCaught = false;
+        String inputString = null;
+
+        do {
+            exceptionCaught = false;
+            try {
+                inputString = input.nextLine();
+            } catch (NoSuchElementException e) {
+                System.out.println("Вы не ввели ничего. Повторите попытку.");
+                exceptionCaught = true;
+                input.nextLine();
+            } catch (IllegalStateException e) {
+                System.out.println("Система ввода оказалась в некорректном состоянии. Повторите попытку.");
+                exceptionCaught = true;
+                input = new Scanner(System.in);
+                input.nextLine();
+            }
+        } while (exceptionCaught);
+        return inputString;
     }
 }

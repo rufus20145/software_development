@@ -7,20 +7,20 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
 
 public class Task943603 {
     private static final int MINS_TO_HOURS = 60;
-    private static final int SECS_TO_MINS = 60;
+    private static Scanner input = new Scanner(System.in);
 
     public static void main(final String[] args) {
         long longValue = 0;
         String scannedLine;
-        final Scanner input = new Scanner(System.in);
 
-        scannedLine = input.nextLine().replaceAll("['’‘]", "\"");
+        scannedLine = getStringValue().replaceAll("['’‘]", "\"");
 
         final Gson gson = new Gson();
 
@@ -77,5 +77,27 @@ public class Task943603 {
         }
         System.err.println("Что-то сломалось. Всё, что я знаю, записано в файл " + fileName);
         System.exit(1);
+    }
+
+    private static String getStringValue() {
+        boolean exceptionCaught = false;
+        String inputString = null;
+
+        do {
+            exceptionCaught = false;
+            try {
+                inputString = input.nextLine();
+            } catch (NoSuchElementException e) {
+                System.out.println("Вы не ввели ничего. Повторите попытку.");
+                exceptionCaught = true;
+                input.nextLine();
+            } catch (IllegalStateException e) {
+                System.out.println("Система ввода оказалась в некорректном состоянии. Повторите попытку.");
+                exceptionCaught = true;
+                input = new Scanner(System.in);
+                input.nextLine();
+            }
+        } while (exceptionCaught);
+        return inputString;
     }
 }

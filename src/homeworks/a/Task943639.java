@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 // Works in Java 18. In further versions class Date will be deleted.
@@ -20,16 +21,17 @@ public class Task943639 {
     private static final int ONE = 1;
     private static final int START_VALUE_OF_WORK_DAYS = 4;
     private static final String DATE_REGEX = "^(0?[1-9]|[12]\\d|3[01])\\.(0?[1-9]|1[012])\\.\\d{4}$";
+    private static Scanner input = new Scanner(System.in);
 
     public static void main(String[] args) {
         Calendar startCalendar;
         Calendar calendar;
         SimpleDateFormat sdf = new SimpleDateFormat("d.M.yyyy");
-        Scanner input = new Scanner(System.in);
+
         Date date = null;
         int numberOfWorkDay;
 
-        String startDateString = input.nextLine();
+        String startDateString = getStringValue();
 
         if (startDateString.matches(DATE_REGEX)) {
             try {
@@ -92,5 +94,27 @@ public class Task943639 {
         }
         System.err.println("Что-то сломалось. Всё, что я знаю, записано в файл " + fileName);
         System.exit(1);
+    }
+
+    private static String getStringValue() {
+        boolean exceptionCaught = false;
+        String inputString = null;
+
+        do {
+            exceptionCaught = false;
+            try {
+                inputString = input.nextLine();
+            } catch (NoSuchElementException e) {
+                System.out.println("Вы не ввели ничего. Повторите попытку.");
+                exceptionCaught = true;
+                input.nextLine();
+            } catch (IllegalStateException e) {
+                System.out.println("Система ввода оказалась в некорректном состоянии. Повторите попытку.");
+                exceptionCaught = true;
+                input = new Scanner(System.in);
+                input.nextLine();
+            }
+        } while (exceptionCaught);
+        return inputString;
     }
 }
