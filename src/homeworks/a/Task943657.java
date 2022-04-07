@@ -2,13 +2,9 @@ package src.homeworks.a;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Task943657 {
-    /**
-     *
-     */
     private static final int START_VALUE = -1;
     private static final int TWO = 2;
     private static final int THREE = 3;
@@ -25,13 +21,13 @@ public class Task943657 {
         List<String> scannedStrings = new ArrayList<>();
         int[] numberOfVisitors = new int[NUMBER_OF_MINUTES_IN_DAY];
 
-        do {
-            String buffer = getStringValue();
+        while (input.hasNextLine()) {
+            String buffer = input.nextLine();
             if (buffer.equals("")) {
                 break;
             }
             scannedStrings.add(buffer);
-        } while (true);
+        }
 
         for (String string : scannedStrings) {
             if (string.matches(DOUBLE_TIME_REGEX)) {
@@ -75,27 +71,5 @@ public class Task943657 {
     private static String convertToHoursAndMinutes(int numOfMinutes) {
         return String.format("%02d:%02d", numOfMinutes / MINUTES_TO_HOURS,
                 numOfMinutes % MINUTES_TO_HOURS);
-    }
-
-    private static String getStringValue() {
-        boolean exceptionCaught = false;
-        String inputString = null;
-
-        do {
-            exceptionCaught = false;
-            try {
-                inputString = input.nextLine();
-            } catch (NoSuchElementException e) {
-                System.out.println("Вы не ввели ничего. Повторите попытку.");
-                exceptionCaught = true;
-                input.nextLine();
-            } catch (IllegalStateException e) {
-                System.out.println("Система ввода оказалась в некорректном состоянии. Повторите попытку.");
-                exceptionCaught = true;
-                input = new Scanner(System.in);
-                input.nextLine();
-            }
-        } while (exceptionCaught);
-        return inputString;
     }
 }
