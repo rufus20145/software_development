@@ -16,7 +16,6 @@ import java.util.Scanner;
 import com.google.gson.Gson;
 
 //['12.09.2020', '14.09.2020-02.10.2020']
-//['12.09.2020', '14.09.2020-02.10.2020']
 //['14.09.2020-02.10.2020']
 
 public class Task943621 {
@@ -73,7 +72,7 @@ public class Task943621 {
 
         System.out.println(
                 BookingPeriod.checkAvailabilityForRequest(bookingRequest, bookedDates.toArray(new BookingPeriod[0])));
-
+                
         input.close();
     }
 
@@ -82,12 +81,12 @@ public class Task943621 {
         private final Calendar endDate;
         private boolean isOneDay;
 
-        public BookingPeriod() {
+        BookingPeriod() {
             this.startDate = new GregorianCalendar();
             this.endDate = new GregorianCalendar();
         }
 
-        public BookingPeriod(final String string) {
+        BookingPeriod(final String string) {
             this();
 
             final Date date = parseDateFromString(string, DATE_FORMAT);
@@ -96,7 +95,7 @@ public class Task943621 {
             this.isOneDay = true;
         }
 
-        public BookingPeriod(final String string1, final String string2) {
+        BookingPeriod(final String string1, final String string2) {
             this();
 
             this.startDate.setTime(parseDateFromString(string1, DATE_FORMAT));
@@ -131,15 +130,10 @@ public class Task943621 {
             boolean availability = true;
 
             for (BookingPeriod bPeriod : bookedDates) {
-                if ((request.startDate.after(bPeriod.startDate) &&
-                        request.startDate.before(bPeriod.endDate))
-                        || (request.endDate.after(bPeriod.startDate) &&
-                                request.startDate.before(bPeriod.endDate))
-                        || request.startDate.equals(bPeriod.startDate) ||
-                        request.endDate.equals(bPeriod.endDate) ||
-                        request.startDate.equals(bPeriod.endDate) ||
-                        request.endDate.equals(bPeriod.startDate)) {
-
+                if ((request.startDate.after(bPeriod.startDate) && request.startDate.before(bPeriod.endDate))
+                        || (request.endDate.after(bPeriod.startDate) && request.startDate.before(bPeriod.endDate))
+                        || request.startDate.equals(bPeriod.startDate) || request.endDate.equals(bPeriod.endDate)
+                        || request.startDate.equals(bPeriod.endDate) || request.endDate.equals(bPeriod.startDate)) {
                     availability = false;
                     break;
                 }
@@ -164,5 +158,4 @@ public class Task943621 {
         }
         System.err.println("Что-то сломалось. Всё, что я знаю, записано в файл " + fileName);
     }
-
 }

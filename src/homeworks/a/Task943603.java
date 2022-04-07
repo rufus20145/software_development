@@ -28,12 +28,8 @@ public class Task943603 {
 
         for (final TimeCounter tc : tcs) {
             tc.convertStringsToDates();
-            // longValue += tc.getDurationInMinutes();
-            longValue += tc.getDurationInSeconds();
+            longValue += tc.getDurationInMinutes();
         }
-
-        // закомментировать в случае смены методов в 32-33 строках
-        longValue /= SECS_TO_MINS;
 
         System.out.printf("%d-%02d", longValue / MINS_TO_HOURS, longValue % MINS_TO_HOURS);
 
@@ -42,33 +38,16 @@ public class Task943603 {
 
     private class TimeCounter {
         private static final int MS_TO_MINUTES = 60000;
-        private static final long MS_TO_SECONDS = 1000;
         private String start;
         private String end;
         private Date startDate = null;
         private Date endDate = null;
 
         /**
-         * @return разницу между начальной и конечной датами в минутах с округлением
-         *         вниз
-         */
-        public long getDurationInMinutes() {
-            return getDuration() / MS_TO_MINUTES;
-        }
-
-        /**
          * @return разницу между начальной и конечной датами в секундах
          */
-        public long getDurationInSeconds() {
-            return getDuration() / MS_TO_SECONDS;
-        }
-
-        /**
-         * @return разницу между начальной и конечной датами в миллисекундах
-         */
-        public long getDuration() {
-
-            return endDate.getTime() - startDate.getTime();
+        public long getDurationInMinutes() {
+            return endDate.getTime() / MS_TO_MINUTES - startDate.getTime() / MS_TO_MINUTES;
         }
 
         private void convertStringsToDates() {

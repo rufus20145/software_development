@@ -13,6 +13,11 @@ import java.util.Scanner;
 
 // Works in Java 18. In further versions class Date will be deleted.
 public class Task943639 {
+
+    private static final int FOUR = 4;
+    private static final int THREE = 3;
+    private static final int TWO = 2;
+    private static final int ONE = 1;
     private static final int START_VALUE_OF_WORK_DAYS = 4;
     private static final String DATE_REGEX = "^(0?[1-9]|[12]\\d|3[01])\\.(0?[1-9]|1[012])\\.\\d{4}$";
 
@@ -30,7 +35,7 @@ public class Task943639 {
             try {
                 date = sdf.parse(startDateString);
             } catch (ParseException e) {
-                saveStacktraceToFile(e);
+                saveStackTraceToFile(e);
             }
         } else {
             System.err.println("Введенная строка не соответствует формату.");
@@ -47,7 +52,7 @@ public class Task943639 {
         numberOfWorkDay = 1;
         do {
             switch (numberOfWorkDay) {
-                case 1:
+                case ONE:
                     if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
                         calendar.add(Calendar.DAY_OF_MONTH, 1);
                         System.out.println(sdf.format(calendar.getTime()));
@@ -58,9 +63,9 @@ public class Task943639 {
                     }
                     numberOfWorkDay = START_VALUE_OF_WORK_DAYS;
                     break;
-                case 2:
-                case 3:
-                case 4:
+                case TWO:
+                case THREE:
+                case FOUR:
                     numberOfWorkDay--;
                     calendar.add(Calendar.DAY_OF_MONTH, 1);
                     break;
@@ -72,7 +77,7 @@ public class Task943639 {
         input.close();
     }
 
-    private static void saveStacktraceToFile(ParseException e) {
+    private static void saveStackTraceToFile(ParseException e) {
         SimpleDateFormat timeStampPattern = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss");
         String fileName = "Log_" + timeStampPattern.format(java.time.LocalDateTime.now()) + ".txt";
         File myFile = new File(fileName);
