@@ -12,7 +12,6 @@ import java.util.GregorianCalendar;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-// Works in Java 18. In further versions class Date will be deleted.
 public class Task943639 {
 
     private static final int FOUR = 4;
