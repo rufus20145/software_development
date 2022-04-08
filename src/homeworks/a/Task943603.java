@@ -20,7 +20,7 @@ public class Task943603 {
         long longValue = 0;
         String scannedLine;
 
-        scannedLine = getStringValue().replaceAll("['’‘]", "\"");
+        scannedLine = getStringValue().replaceAll("['’‘]", "\"").replaceAll(";", "");
 
         final Gson gson = new Gson();
 
