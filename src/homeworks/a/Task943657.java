@@ -23,7 +23,7 @@ public class Task943657 {
 
         while (input.hasNextLine()) {
             String buffer = input.nextLine();
-            if (buffer.equals("")) {
+            if (buffer.isEmpty()) {
                 break;
             }
             scannedStrings.add(buffer);
