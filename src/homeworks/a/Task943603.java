@@ -1,4 +1,4 @@
-package src.homeworks.a;
+package homeworks.a;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,7 +20,7 @@ public class Task943603 {
         long longValue = 0;
         String scannedLine;
 
-        scannedLine = getStringValue().replaceAll("['’‘]", "\"").replaceAll(";", "");
+        scannedLine = getStringValue().replaceAll("['’‘]", "\"").replace(";", "");
 
         final Gson gson = new Gson();
 

@@ -1,4 +1,4 @@
-package src.homeworks.a;
+package homeworks.a;
 
 import java.io.BufferedWriter;
 import java.io.File;
