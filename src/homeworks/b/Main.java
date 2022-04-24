@@ -7,14 +7,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -27,12 +27,13 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * Main
+ * На вход программе передаются два файла: settings.xml и input.xml. На
+ * основании данных из первого необходимо отсортировать массив во втором
  */
 public class Main {
 
     private static final int FILE_NOT_FOUND = 1;
-    private static final String OUTPUT_FILENAME = ".\\output.xml";
+    private static final String OUTPUT_FILENAME = "./output.xml";
 
     public static void main(String[] args) {
         String inputFilename;
@@ -43,6 +44,7 @@ public class Main {
         File settingsFile;
         File inputFile;
         Document dataDocument;
+        Document settingsDocument;
 
         try (Scanner input = new Scanner(System.in)) {
             settingsFilename = input.nextLine();
@@ -52,19 +54,13 @@ public class Main {
         try {
             settingsFile = new File(settingsFilename);
             inputFile = new File(inputFilename);
-            if (!settingsFile.exists()) {
-                System.out.println("Файл с настройками не был найден. Проверьте правильность введенного пути.");
-                System.exit(FILE_NOT_FOUND);
-            }
-            if (!inputFile.exists()) {
-                System.out.println("Файл с данными не был найден. Проверьте правильность введенного пути.");
-                System.exit(FILE_NOT_FOUND);
-            }
+            checkFileForAvailability(settingsFile);
+            checkFileForAvailability(inputFile);
 
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
-            Document settingsDocument = dBuilder.parse(settingsFile);
+            settingsDocument = dBuilder.parse(settingsFile);
             settingsDocument.getDocumentElement().normalize();
             someArray = settingsDocument.getElementsByTagName("array").item(0).getAttributes()
                     .getNamedItem("name");
@@ -90,7 +86,6 @@ public class Main {
                         if (arrayToSort.item(j).getNodeType() == Node.ELEMENT_NODE) {
                             elementsToSort.add((Element) arrayToSort.item(j));
                         }
-                        // nodeWithArrayToSort.removeChild(arrayToSort.item(j));
                     }
 
                     Collections.sort(elementsToSort,
@@ -98,12 +93,29 @@ public class Main {
                                     .compareTo(e2.getAttribute(someValue.getTextContent())));
 
                     for (int j = 0; j < elementsToSort.size(); j++) {
-                        // nodeWithArrayToSort.appendChild(elementsToSort.get(j));
                         nodeWithArrayToSort.replaceChild(elementsToSort.get(j), arrayToSort.item(j));
                     }
                 }
             }
 
+            saveDocumentAsXml(dataDocument);
+
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Something crashed. Please see.", e);
+        }
+    }
+
+    private static void checkFileForAvailability(File file) {
+        if (!file.exists()) {
+            System.out.println(
+                    "Файл" + file.getAbsolutePath() + "не был найден. Проверьте правильность введенного пути.");
+            System.exit(FILE_NOT_FOUND);
+        }
+    }
+
+    private static void saveDocumentAsXml(Document dataDocument) {
+
+        try {
             File outputFile = new File(OUTPUT_FILENAME);
             StreamResult result = new StreamResult(outputFile);
 
@@ -115,19 +127,8 @@ public class Main {
             DOMSource source = new DOMSource(dataDocument);
 
             transformer.transform(source, result);
-
-        } catch (ParserConfigurationException e) {
-            // TODO: handle exception
-        } catch (SAXException e) {
-            // TODO: handle exception
-        } catch (IOException e) {
-            // TODO: handle exception
-        } catch (TransformerConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         } catch (TransformerException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Something crashed while saving file. Please see.", e);
         }
     }
 }
