@@ -21,13 +21,7 @@ public class Task943657 {
         List<String> scannedStrings = new ArrayList<>();
         int[] numberOfVisitors = new int[NUMBER_OF_MINUTES_IN_DAY];
 
-        while (input.hasNextLine()) {
-            String buffer = input.nextLine();
-            if (buffer.isEmpty()) {
-                break;
-            }
-            scannedStrings.add(buffer);
-        }
+        scanLines(scannedStrings);
 
         for (String string : scannedStrings) {
             if (string.matches(DOUBLE_TIME_REGEX)) {
@@ -62,6 +56,16 @@ public class Task943657 {
         System.out.println(convertToHoursAndMinutes(maxVisitorsStart) + " " + convertToHoursAndMinutes(maxVisitorsEnd));
 
         input.close();
+    }
+
+    private static void scanLines(List<String> scannedStrings) {
+        while (input.hasNextLine()) {
+            String buffer = input.nextLine();
+            if (buffer.isEmpty()) {
+                break;
+            }
+            scannedStrings.add(buffer);
+        }
     }
 
     private static int convertToMinutes(String hours, String minutes) {

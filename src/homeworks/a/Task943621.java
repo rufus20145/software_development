@@ -114,7 +114,7 @@ public class Task943621 {
             try {
                 return sdf.parse(string);
             } catch (final ParseException e) {
-                saveStackTraceToFile(e);
+                BookingPeriod.saveStackTraceToFile(e);
                 System.exit(PARSING_ERROR_CODE);
             }
             return null;
@@ -125,6 +125,22 @@ public class Task943621 {
             SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
             return "BookingPeriod [endDate=" + sdf.format(endDate.getTime()) + ", startDate="
                     + sdf.format(startDate.getTime()) + ", isOneDay=" + isOneDay + "]";
+        }
+
+        private static void saveStackTraceToFile(final Exception e) {
+            final SimpleDateFormat timeStampPattern = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss");
+            final String fileName = "Log_" + timeStampPattern.format(java.time.LocalDateTime.now()) + ".txt";
+            final File myFile = new File(fileName);
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(myFile));) {
+                for (final StackTraceElement elem : e.getStackTrace()) {
+                    writer.write(elem.toString() + "\n");
+                }
+            } catch (final IOException ex) {
+                System.out
+                        .println("При записи данных о прошлой ошибке произошла какая-то ошибка. Самоликвидируюсь.");
+                System.exit(Task943621.FILESAVE_ERROR_CODE);
+            }
+            System.err.println("Что-то сломалось. Всё, что я знаю, записано в файл " + fileName);
         }
 
         public static boolean checkAvailabilityForRequest(BookingPeriod request, BookingPeriod[] bookedDates) {
@@ -142,22 +158,6 @@ public class Task943621 {
             return availability;
         }
 
-    }
-
-    private static void saveStackTraceToFile(final Exception e) {
-        final SimpleDateFormat timeStampPattern = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss");
-        final String fileName = "Log_" + timeStampPattern.format(java.time.LocalDateTime.now()) + ".txt";
-        final File myFile = new File(fileName);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(myFile));) {
-            for (final StackTraceElement elem : e.getStackTrace()) {
-                writer.write(elem.toString() + "\n");
-            }
-        } catch (final IOException ex) {
-            System.out
-                    .println("При записи данных о прошлой ошибке произошла какая-то ошибка. Самоликвидируюсь.");
-            System.exit(FILESAVE_ERROR_CODE);
-        }
-        System.err.println("Что-то сломалось. Всё, что я знаю, записано в файл " + fileName);
     }
 
     private static String getStringValue() {
