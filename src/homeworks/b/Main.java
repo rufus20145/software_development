@@ -39,7 +39,6 @@ public class Main {
         String settingsFilename;
         Node someArray;
         Node someValue;
-        List<Element> elementsToSort;
         File settingsFile;
         File inputFile;
         Document dataDocument;
@@ -74,26 +73,21 @@ public class Main {
             // на случай, если тегов c названием "someArray" больше одного
             for (int i = 0; i < arraysToSort.getLength(); i++) {
                 Node nodeWithArrayToSort = arraysToSort.item(i);
-
-                if (nodeWithArrayToSort.getNodeType() == Node.ELEMENT_NODE) {
-                    Element elementWithArrayToSort = (Element) nodeWithArrayToSort;
-                    // получаем список элементов, которые собственно надо отсортировать
-                    NodeList arrayToSort = elementWithArrayToSort.getChildNodes();
-
-                    elementsToSort = new ArrayList<>();
-                    for (int j = 0; j < arrayToSort.getLength(); j++) {
-                        if (arrayToSort.item(j).getNodeType() == Node.ELEMENT_NODE) {
-                            elementsToSort.add((Element) arrayToSort.item(j));
-                        }
+                // получаем список элементов, которые собственно надо отсортировать
+                NodeList arrayToSort = nodeWithArrayToSort.getChildNodes();
+                List<Element> elementsToSort = new ArrayList<>();
+                for (int j = 0; j < arrayToSort.getLength(); j++) {
+                    if (arrayToSort.item(j).getNodeType() == Node.ELEMENT_NODE) {
+                        elementsToSort.add((Element) arrayToSort.item(j));
                     }
+                }
 
-                    Collections.sort(elementsToSort,
-                            (Element e1, Element e2) -> e1.getAttribute(someValue.getTextContent())
-                                    .compareTo(e2.getAttribute(someValue.getTextContent())));
+                Collections.sort(elementsToSort,
+                        (Element e1, Element e2) -> e1.getAttribute(someValue.getTextContent())
+                                .compareTo(e2.getAttribute(someValue.getTextContent())));
 
-                    for (int j = 0; j < elementsToSort.size(); j++) {
-                        nodeWithArrayToSort.replaceChild(elementsToSort.get(j), arrayToSort.item(j));
-                    }
+                for (int j = 0; j < elementsToSort.size(); j++) {
+                    nodeWithArrayToSort.replaceChild(elementsToSort.get(j), arrayToSort.item(j));
                 }
             }
 
@@ -126,7 +120,8 @@ public class Main {
 
             transformer.transform(source, result);
         } catch (TransformerException e) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Something crashed while saving file. Please see.", e);
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Something crashed while saving file. Please see.",
+                    e);
         }
     }
 }
