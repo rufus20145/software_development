@@ -22,7 +22,7 @@ public class Run {
         long v = dd * 1000 + (studentNumber % 10) * 100 + mm;
         long u = mm * 1000 + (studentNumber % 10) * 100 + dd;
 
-        System.out.printf("%d, %d, %d, %d%n", a, b, v, u);
+        System.out.printf("Ваши числовые величины: %05d, %05d, %05d, %05d%n", a, b, v, u);
 
         long[] base = new long[BASE_SIZE];
 
