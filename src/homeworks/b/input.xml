@@ -1,0 +1,9 @@
+<xml>
+    <MyStoreDescription>This is my best store!
+    </MyStoreDescription>
+    <MyBooksCollection value="NotForResale" />
+    <BookStore>
+        <Book Author="Pushkin" Name="Captains Daughter" />
+        <Book Author="Lermontov" Name="Mtsyry" />
+    </BookStore>
+</xml>
