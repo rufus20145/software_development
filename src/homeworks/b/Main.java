@@ -2,6 +2,8 @@ package homeworks.b;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.Timestamp;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,7 +50,7 @@ public class Main {
             settingsFilename = input.nextLine();
             inputFilename = input.nextLine();
         }
-
+        long startTime = System.currentTimeMillis();
         try {
             settingsFile = new File(settingsFilename);
             inputFile = new File(inputFilename);
@@ -92,6 +94,10 @@ public class Main {
             }
 
             saveDocumentAsXml(dataDocument);
+
+            long endTime = System.currentTimeMillis();
+
+            System.out.println("Время работы программы: " + ((startTime - endTime) / 1000) + " секунд(ы).");
 
         } catch (ParserConfigurationException | SAXException | IOException e) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Something crashed. Please see.", e);
