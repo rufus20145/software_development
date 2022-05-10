@@ -50,6 +50,18 @@ public class Run {
         long w = a * b + u * v - a * u;
         ModularNumber wMod = new ModularNumber(base, w, "w");
 
+        System.out.println("Задание 6. ");
+        long e = base[6];
+        long g = base[7];
+        long eg = e % g;
+
+        System.out.printf("Ваши числовые величины: e = %d, g = %d, |e|g = %d%n", e, g, eg);
+
+        Diofant diof = new Diofant(e, g, 1);
+        diof.solve();
+
+        System.out.println(diof.getResult());
+
         input.close();
 
     }
