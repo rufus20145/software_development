@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
+  All rights reserved. Use is subject to license terms.
+
+  This file is available and licensed under the following license:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the distribution.
+  - Neither the name of Oracle Corporation nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox prefHeight="720.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.work.Controller">
+  <children>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="720.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Button fx:id="nextButtonId" layoutX="510.0" layoutY="651.0" mnemonicParsing="false" onMouseClicked="#processClick" prefHeight="58.0" prefWidth="119.0" text="Далее" />
+            <Text layoutX="105.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Выберите все города, являющиеся столицами государств:" wrappingWidth="430.93682861328125">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <CheckBox fx:id="moscowId" layoutX="105.0" layoutY="79.0" mnemonicParsing="false" text="Москва">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="romeId" layoutX="105.0" layoutY="157.0" mnemonicParsing="false" text="Рим">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="marselId" layoutX="105.0" layoutY="131.0" mnemonicParsing="false" text="Марсель">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="pragaId" layoutX="105.0" layoutY="183.0" mnemonicParsing="false" text="Прага">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="shanghaiId" layoutX="105.0" layoutY="105.0" mnemonicParsing="false" text="Шанхай">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="osloId" layoutX="105.0" layoutY="209.0" mnemonicParsing="false" text="Осло">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </CheckBox>
+            <Text fx:id="resultTextId" layoutX="63.0" layoutY="620.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="430.93682861328125">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <Text layoutX="104.0" layoutY="284.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Мировой рекорд по прыжкам в длину составляет:" wrappingWidth="430.93682861328125">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <RadioButton fx:id="var1" disable="true" layoutX="104.0" layoutY="308.0" mnemonicParsing="false" text="3,33 м">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </RadioButton>
+            <RadioButton fx:id="var2" disable="true" layoutX="104.0" layoutY="334.0" mnemonicParsing="false" text="3,47 м">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </RadioButton>
+            <RadioButton fx:id="var3" disable="true" layoutX="104.0" layoutY="360.0" mnemonicParsing="false" text="2,89 м">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </RadioButton>
+            <RadioButton fx:id="var4" disable="true" layoutX="104.0" layoutY="386.0" mnemonicParsing="false" text="2,05 м">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </RadioButton>
+            <Text layoutX="104.0" layoutY="470.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Продолжите фразу: &quot;citius altius" wrappingWidth="243.3417205810547">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <ComboBox fx:id="thirdQuestionComboBox" disable="true" layoutX="347.0" layoutY="451.0" prefWidth="150.0" promptText="Выберите вариант ответа" />
+         </children>
+    </AnchorPane>
+  </children>
+</VBox>
