@@ -57,7 +57,7 @@ public class Run {
 
         System.out.printf("Ваши числовые величины: e = %d, g = %d, |e|g = %d%n", e, g, eg);
 
-        Diofant diof = new Diofant(e, g, 1);
+        Diofant diof = new Diofant(e, g);
         diof.solve();
 
         System.out.println(diof.getResult());
