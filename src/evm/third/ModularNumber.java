@@ -27,7 +27,8 @@ public class ModularNumber {
         this.label = label;
 
         System.out.println(
-                "Модулярное представление числа " + decimalValue + " равно " + this.label + " = " + this.toString() + "\n");
+                "Модулярное представление числа " + decimalValue + " равно " + this.label + " = " + this.toString()
+                        + "\n");
     }
 
     public ModularNumber(long[] base, long[] number, String label) {
@@ -80,8 +81,7 @@ public class ModularNumber {
         System.out.println("===================================\n  Вычитаем число из числа");
 
         if (!Arrays.equals(this.base, another.base)) {
-            System.out.println(
-                    DIFFERENT_BASES_WARNING);
+            System.out.println(DIFFERENT_BASES_WARNING);
         }
         long[] tmp = new long[this.number.length];
         for (int i = 0; i < tmp.length; i++) {
@@ -101,8 +101,7 @@ public class ModularNumber {
         for (int i = 0; i < tmp.length; i++) {
             tmp[i] = decimalValue - (decimalValue / base[i]) * base[i];
             System.out.printf("%s_%d = %d - [%d / %d] * %d = %d%n", label, i + 1, decimalValue, decimalValue, base[i],
-                    base[i],
-                    tmp[i]);
+                    base[i], tmp[i]);
         }
 
         return tmp;
@@ -111,7 +110,5 @@ public class ModularNumber {
     public String toString() {
         return Arrays.toString(number).replace("[", "(").replace("]", ")");
     }
-
-    
 
 }
