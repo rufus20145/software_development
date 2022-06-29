@@ -26,16 +26,16 @@ public class Run {
          * System.out.printf("Ваши константы: TODO");
          */
         // B ↔ (23, 06, 02, 19, 07)
-        int[] baseN = { 79, 181, 293, 421, 557, 673, 821, 953 }; // 12
-        int[] baseK = { 67, 167, 277, 401, 523, 653, 767, 937 }; // 9
+        long[] baseN = { 79, 181, 293, 421, 557, 673, 821, 953 }; // 12
+        long[] baseK = { 67, 167, 277, 401, 523, 653, 767, 937 }; // 9
         System.out.println(
                 "Введите число для перевода в полиадический формат. Основания жестко закодированы строчкой выше.");
         long number = input.nextLong();
         List<Long> polyNumber = new ArrayList<>();
         int i = 0;
-        int[] base = baseK;
+        long[] base = baseN;
         do {
-            System.out.printf("A_%d = [%d/%d]*%d + a_%d = %d*%d + a_%d = %d + a_%d => a_%d = %d%n",
+            System.out.printf("U_%d = [%d/%d]*%d + u_%d = %d*%d + u_%d = %d + u_%d => u_%d = %d%n",
                     i, number, base[i], base[i], i, number / base[i], base[i], i,
                     (number / base[i]) * base[i], i, i, number % base[i]);
             if (number == 0) {
